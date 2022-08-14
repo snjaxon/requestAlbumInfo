@@ -7,13 +7,15 @@ import requests
 url_artist = "https://theaudiodb.p.rapidapi.com/search.php"
 url_album = "https://theaudiodb.p.rapidapi.com/searchalbum.php"
 url_track = url = "https://theaudiodb.p.rapidapi.com/track.php"
+url_videos = "https://theaudiodb.p.rapidapi.com/mvid.php"
+
 headers = {
     "X-RapidAPI-Key": "76629d5f79msh7f105d831bd6767p140c96jsndc4e04ff6293",
     "X-RapidAPI-Host": "theaudiodb.p.rapidapi.com"
 }
 
 root = tk.Tk()
-root.geometry("340x690")
+root.geometry("340x790")
 root.title("Name that Album")
 # logo
 logo = Image.open("best albums.jpg")
@@ -30,6 +32,7 @@ artist_entry = tk.Entry(fg="black", bg='white', width=25)
 artist_entry.grid(padx=20, pady=5)
 
 global album_list
+global video_link
 
 
 def album_list_request(url):
@@ -50,6 +53,7 @@ def album_list_request(url):
             show_artist_info_button.config(state=NORMAL)
             show_album_info_button.config(state=NORMAL)
             show_track_list_button.config(state=NORMAL)
+            show_music_videos_button.config(state=NORMAL)
             clear_form_button.config(state=NORMAL)
     except TypeError:
         tk.messagebox.showwarning(title="No Artist Found", message="Please enter a valid artist name.")
@@ -134,6 +138,45 @@ def track_listing():
         track_window.destroy()
 
 
+def show_music_videos():
+    global video_window
+    global video_desc
+    try:
+        video_window = tk.Toplevel(root)
+        video_window.title("Music Videos")
+        video_window.geometry('750x400')
+        querystring = {"s": artist_entry.get()}
+        response = requests.request("GET", url_artist, headers=headers, params=querystring)
+        info = response.json()
+        video_info = info['artists']
+        for video in video_info:
+            video_desc = video['idArtist']
+        querystring2 = {"i": video_desc}
+        response2 = requests.request("GET", url_videos, headers=headers, params=querystring2)
+        info2 = response2.json()
+        music_videos = info2['mvids']
+        video_desc_list = tk.Listbox(video_window, height=20, width=80)
+        video_desc_list.grid(ipadx=20, ipady=20, padx=20, pady=10)
+        for videos in music_videos:
+            video_name = videos['strTrack']
+            video_link = videos['strMusicVid']
+            print(video_link)
+            all_video_info = video_name + ' - ' + video_link
+            video_desc_list.insert(END, all_video_info)
+        # print(music_videos)
+    except TypeError:
+        tk.messagebox.showwarning(title="No Artist Found", message="Please enter a valid artist name.")
+        album_list.destroy()
+        artist_entry.delete(0, END)
+    play_music_videos_button = tk.Button(video_window, text="Play video from artist", command=play_music_videos,
+                                         state=DISABLED)
+    play_music_videos_button.grid(column=1, row=0)
+
+
+def play_music_videos():
+    pass
+
+
 def clear_list():
     album_list.delete(0, END)
     album_list.destroy()
@@ -141,6 +184,7 @@ def clear_list():
     show_artist_info_button.config(state=DISABLED)
     show_album_info_button.config(state=DISABLED)
     show_track_list_button.config(state=DISABLED)
+    show_music_videos_button.config(state=DISABLED)
     clear_form_button.config(state=DISABLED)
 
 
@@ -157,6 +201,10 @@ show_album_info_button.grid(padx=0, pady=0)
 
 show_track_list_button = tk.Button(root, text="Show Tracks from album", command=track_listing, state=DISABLED)
 show_track_list_button.grid(padx=0, pady=0)
+
+show_music_videos_button = tk.Button(root, text="Show music videos from artist", command=show_music_videos,
+                                     state=DISABLED)
+show_music_videos_button.grid(padx=0, pady=0)
 
 clear_form_button = tk.Button(root, text="Clear album list", command=clear_list, state=DISABLED)
 clear_form_button.grid(padx=5, pady=5)
