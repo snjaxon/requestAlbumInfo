@@ -1,8 +1,12 @@
 import tkinter as tk
+import urllib
 from tkinter import END, WORD, ANCHOR, DISABLED, NORMAL, messagebox
 
 from PIL import Image, ImageTk
 import requests
+import webbrowser
+import os
+from stat import S_IREAD
 
 url_artist = "https://theaudiodb.p.rapidapi.com/search.php"
 url_album = "https://theaudiodb.p.rapidapi.com/searchalbum.php"
@@ -16,7 +20,7 @@ headers = {
 
 root = tk.Tk()
 root.geometry("340x790")
-root.title("Name that Album")
+root.title("Name That Album")
 # logo
 logo = Image.open("best albums.jpg")
 logo = ImageTk.PhotoImage(logo)
@@ -33,6 +37,7 @@ artist_entry.grid(padx=20, pady=5)
 
 global album_list
 global video_link
+global video_desc_list
 
 
 def album_list_request(url):
@@ -140,7 +145,7 @@ def track_listing():
 
 def show_music_videos():
     global video_window
-    global video_desc
+    global video_desc_list
     try:
         video_window = tk.Toplevel(root)
         video_window.title("Music Videos")
@@ -160,21 +165,24 @@ def show_music_videos():
         for videos in music_videos:
             video_name = videos['strTrack']
             video_link = videos['strMusicVid']
-            print(video_link)
             all_video_info = video_name + ' - ' + video_link
             video_desc_list.insert(END, all_video_info)
-        # print(music_videos)
     except TypeError:
         tk.messagebox.showwarning(title="No Artist Found", message="Please enter a valid artist name.")
         album_list.destroy()
         artist_entry.delete(0, END)
-    play_music_videos_button = tk.Button(video_window, text="Play video from artist", command=play_music_videos,
-                                         state=DISABLED)
-    play_music_videos_button.grid(column=1, row=0)
+    play_video_button = tk.Button(video_window, text="Play Selected Video In Browser", command=play_music_video)
+    play_video_button.grid(column=1, row=0)
 
 
-def play_music_videos():
-    pass
+def play_music_video():
+    try:
+        video_title = video_desc_list.get(ANCHOR)
+        video_title_split = video_title.split(" - ", 1)
+        video_title_name = video_title_split[1]
+        webbrowser.open_new(video_title_name)
+    except IndexError:
+        tk.messagebox.showwarning(title="No Video Selected", message="Please select a video from the list.")
 
 
 def clear_list():
@@ -188,6 +196,20 @@ def clear_list():
     clear_form_button.config(state=DISABLED)
 
 
+def help_window():
+    os.chmod("help guide.txt", S_IREAD)
+    webbrowser.open("help guide.txt")
+
+
+# create menu
+my_menu = tk.Menu(root)
+root.config(menu=my_menu)
+
+# add help menu item
+main_menu = tk.Menu(my_menu)
+my_menu.add_cascade(label="Application", menu=main_menu)
+main_menu.add_command(label="Help", command=help_window)
+
 # submit information
 
 submit_button = tk.Button(root, text="Submit Artist", command=lambda: (album_list_request(url)))
@@ -199,14 +221,14 @@ show_artist_info_button.grid(padx=0, pady=0)
 show_album_info_button = tk.Button(root, text="Show Album Information", command=open_album_info, state=DISABLED)
 show_album_info_button.grid(padx=0, pady=0)
 
-show_track_list_button = tk.Button(root, text="Show Tracks from album", command=track_listing, state=DISABLED)
+show_track_list_button = tk.Button(root, text="Show Tracks From Album", command=track_listing, state=DISABLED)
 show_track_list_button.grid(padx=0, pady=0)
 
-show_music_videos_button = tk.Button(root, text="Show music videos from artist", command=show_music_videos,
+show_music_videos_button = tk.Button(root, text="Show Music Videos From Artist", command=show_music_videos,
                                      state=DISABLED)
 show_music_videos_button.grid(padx=0, pady=0)
 
-clear_form_button = tk.Button(root, text="Clear album list", command=clear_list, state=DISABLED)
+clear_form_button = tk.Button(root, text="Clear Album List", command=clear_list, state=DISABLED)
 clear_form_button.grid(padx=5, pady=5)
 
 root.mainloop()

@@ -1,0 +1,17 @@
+Name that album guide:
+
+What artist are you interested in?  Enter in your favorite artist or band.
+
+Submit Artist: Click this button to get a list of all albums by your favorite artist.
+
+Show Artist Information: Click this button to get biographical information about the artist.
+
+Show Album Information: Select an album from the list and then click this button to show any information about selected album.
+
+Show Tracks From Album: Click this button to show all tracks from selected album in list.
+
+Show Music Videos From Artist: Click this button to display a list of music videos available from the artist.
+
+Clear Album List:  Clear the form to perform a new search.
+
+Last updated: 08/16/2022
