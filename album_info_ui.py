@@ -1,5 +1,4 @@
 import tkinter as tk
-import urllib
 from tkinter import END, WORD, ANCHOR, DISABLED, NORMAL, messagebox
 
 from PIL import Image, ImageTk
@@ -10,7 +9,7 @@ from stat import S_IREAD
 
 url_artist = "https://theaudiodb.p.rapidapi.com/search.php"
 url_album = "https://theaudiodb.p.rapidapi.com/searchalbum.php"
-url_track = url = "https://theaudiodb.p.rapidapi.com/track.php"
+url_track = "https://theaudiodb.p.rapidapi.com/track.php"
 url_videos = "https://theaudiodb.p.rapidapi.com/mvid.php"
 
 headers = {
@@ -212,7 +211,7 @@ main_menu.add_command(label="Help", command=help_window)
 
 # submit information
 
-submit_button = tk.Button(root, text="Submit Artist", command=lambda: (album_list_request(url)))
+submit_button = tk.Button(root, text="Submit Artist", command=lambda: (album_list_request(url_track)))
 submit_button.grid(padx=5, pady=5)
 
 show_artist_info_button = tk.Button(root, text="Show Artist Information", command=show_artist_info, state=DISABLED)
