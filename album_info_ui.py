@@ -115,11 +115,12 @@ def track_listing():
     global album_id
     try:
         track_window = tk.Toplevel(root)
-        track_window.title("Track Listing")
-        track_window.geometry('310x397')
+
         album_title = album_list.get(ANCHOR)
         album_title_split = album_title.split(" -", 1)
         album_title_name = album_title_split[0]
+        track_window.title("Track Listing for: " + album_title_name)
+        track_window.geometry('310x397')
         querystring = {"s": artist_entry.get(), "a": album_title_name}
         response = requests.request("GET", url_album, headers=headers, params=querystring)
         info = response.json()
