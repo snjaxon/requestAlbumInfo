@@ -11,6 +11,7 @@ url_artist = "https://theaudiodb.p.rapidapi.com/search.php"
 url_album = "https://theaudiodb.p.rapidapi.com/searchalbum.php"
 url_track = "https://theaudiodb.p.rapidapi.com/track.php"
 url_videos = "https://theaudiodb.p.rapidapi.com/mvid.php"
+url_top_ten = "https://theaudiodb.p.rapidapi.com/track-top10.php"
 
 headers = {
     "X-RapidAPI-Key": "76629d5f79msh7f105d831bd6767p140c96jsndc4e04ff6293",
@@ -37,6 +38,8 @@ artist_entry.grid(padx=20, pady=5)
 global album_list
 global video_link
 global video_desc_list
+global top_ten_list
+global artist
 
 
 def album_list_request(url):
@@ -55,6 +58,7 @@ def album_list_request(url):
             album_list.insert(END, all_info)
         if len(all_albums) > 0:
             show_artist_info_button.config(state=NORMAL)
+            show_top_ten_songs_button.config(state=NORMAL)
             show_album_info_button.config(state=NORMAL)
             show_track_list_button.config(state=NORMAL)
             show_music_videos_button.config(state=NORMAL)
@@ -143,6 +147,33 @@ def track_listing():
         track_window.destroy()
 
 
+def top_ten_songs():
+    global top_ten_window
+    global top_ten_list
+    global artist
+    try:
+        top_ten_window = tk.Toplevel(root)
+        top_ten_window.geometry('310x397')
+        querystring = {"s": artist_entry.get()}
+        response = requests.request("GET", url_top_ten, headers=headers, params=querystring)
+        top_tracks = response.json()
+        tracks = top_tracks['track']
+        top_ten_list = tk.Listbox(top_ten_window, height=14, width=50)
+        top_ten_list.grid(ipadx=10, ipady=10, padx=10, pady=10)
+        for items in tracks:
+            track_name = items['strTrack']
+            album_name = items['strAlbum']
+            artist = items['strArtist']
+            all_info = track_name + ' - ' + album_name
+            top_ten_list.insert(END, all_info)
+        top_ten_window.title("Top Tracks By: " + artist)
+
+    except TypeError:
+        tk.messagebox.showwarning(title="No tracks found for artist.", message="Sorry there are no top tracks listed "
+                                                                               "for this artist.")
+        track_window.destroy()
+
+
 def show_music_videos():
     global video_window
     global video_desc_list
@@ -190,6 +221,7 @@ def clear_list():
     album_list.destroy()
     artist_entry.delete(0, END)
     show_artist_info_button.config(state=DISABLED)
+    show_top_ten_songs_button.config(state=DISABLED)
     show_album_info_button.config(state=DISABLED)
     show_track_list_button.config(state=DISABLED)
     show_music_videos_button.config(state=DISABLED)
@@ -217,6 +249,9 @@ submit_button.grid(padx=5, pady=5)
 
 show_artist_info_button = tk.Button(root, text="Show Artist Information", command=show_artist_info, state=DISABLED)
 show_artist_info_button.grid(padx=0, pady=0)
+
+show_top_ten_songs_button = tk.Button(root, text="Top Tracks from Artist", command=top_ten_songs, state=DISABLED)
+show_top_ten_songs_button.grid(padx=0, pady=0)
 
 show_album_info_button = tk.Button(root, text="Show Album Information", command=open_album_info, state=DISABLED)
 show_album_info_button.grid(padx=0, pady=0)
