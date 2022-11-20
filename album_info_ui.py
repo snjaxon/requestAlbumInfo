@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import END, WORD, ANCHOR, DISABLED, NORMAL, messagebox
+from tkinter import END, WORD, ANCHOR, DISABLED, NORMAL, messagebox, LEFT, CENTER, TOP
 
 from PIL import Image, ImageTk
 import requests
@@ -19,7 +19,7 @@ headers = {
 }
 
 root = tk.Tk()
-root.geometry("340x790")
+root.geometry("700x560")
 root.title("Name That Album")
 # logo
 logo = Image.open("best albums.jpg")
@@ -30,10 +30,25 @@ logo_label.grid(padx=20, pady=20)
 
 # information
 artist_prompt = tk.Label(root, text="What artist are you interested in?")
-artist_prompt.grid(padx=20, pady=5)
+artist_prompt.grid(column=0, row=1)
+instructions = tk.Label(root, wraplength=350, width=50, text="What kind of music to you like?  Enter in your "
+                                                                      "favorite artist and "
+                                                                      "click the "
+                                                                      "submit button.  You will then see a list of "
+                                                                      "albums by that artist. "
+                                                                      "From there "
+                                                                      "you can see information about the artist and "
+                                                                      "each individual album. "
+                                                                      " Want to know "
+                                                                      "the top tracks by that artist?  Just click the "
+                                                                      "appropriate button. "
+                                                                      "You can even "
+                                                                      "see any available Youtube videos from that "
+                                                                      "artist.")
+instructions.place(x=340, y=50)
 
 artist_entry = tk.Entry(fg="black", bg='white', width=25)
-artist_entry.grid(padx=20, pady=5)
+artist_entry.grid(column=0, row=2, padx=20, pady=5)
 
 global album_list
 global video_link
@@ -49,8 +64,8 @@ def album_list_request(url):
         album_info = response.json()
         all_albums = album_info['album']
         global album_list
-        album_list = tk.Listbox(root, height=14, width=50)
-        album_list.grid(ipadx=10, ipady=10, padx=10, pady=10)
+        album_list = tk.Listbox(root, height=18, width=50)
+        album_list.place(x=360, y=170)
         for items in all_albums:
             album_name = items['strAlbum']
             album_year = items['intYearReleased']
@@ -248,22 +263,22 @@ submit_button = tk.Button(root, text="Submit Artist", command=lambda: (album_lis
 submit_button.grid(padx=5, pady=5)
 
 show_artist_info_button = tk.Button(root, text="Show Artist Information", command=show_artist_info, state=DISABLED)
-show_artist_info_button.grid(padx=0, pady=0)
+show_artist_info_button.grid(padx=0, pady=5)
 
-show_top_ten_songs_button = tk.Button(root, text="Top Tracks from Artist", command=top_ten_songs, state=DISABLED)
-show_top_ten_songs_button.grid(padx=0, pady=0)
+show_top_ten_songs_button = tk.Button(root, text="Show Top Tracks from Artist", command=top_ten_songs, state=DISABLED)
+show_top_ten_songs_button.grid(padx=0, pady=5)
 
 show_album_info_button = tk.Button(root, text="Show Album Information", command=open_album_info, state=DISABLED)
-show_album_info_button.grid(padx=0, pady=0)
+show_album_info_button.grid(padx=0, pady=5)
 
 show_track_list_button = tk.Button(root, text="Show Tracks From Album", command=track_listing, state=DISABLED)
-show_track_list_button.grid(padx=0, pady=0)
+show_track_list_button.grid(padx=0, pady=5)
 
 show_music_videos_button = tk.Button(root, text="Show Music Videos From Artist", command=show_music_videos,
                                      state=DISABLED)
-show_music_videos_button.grid(padx=0, pady=0)
+show_music_videos_button.grid(padx=0, pady=5)
 
 clear_form_button = tk.Button(root, text="Clear Album List", command=clear_list, state=DISABLED)
-clear_form_button.grid(padx=5, pady=5)
+clear_form_button.place(x=460, y=480)
 
 root.mainloop()

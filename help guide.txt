@@ -6,6 +6,8 @@ Submit Artist: Click this button to get a list of all albums by your favorite ar
 
 Show Artist Information: Click this button to get biographical information about the artist.
 
+Show Top Tracks From Artist: Click this button for a list of the most popular tracks from the artist.
+
 Show Album Information: Select an album from the list and then click this button to show any information about selected album.
 
 Show Tracks From Album: Click this button to show all tracks from selected album in list.
