@@ -32,19 +32,19 @@ logo_label.grid(padx=20, pady=20)
 artist_prompt = tk.Label(root, text="What artist are you interested in?")
 artist_prompt.grid(column=0, row=1)
 instructions = tk.Label(root, wraplength=350, width=50, text="What kind of music to you like?  Enter in your "
-                                                                      "favorite artist and "
-                                                                      "click the "
-                                                                      "submit button.  You will then see a list of "
-                                                                      "albums by that artist. "
-                                                                      "From there "
-                                                                      "you can see information about the artist and "
-                                                                      "each individual album. "
-                                                                      " Want to know "
-                                                                      "the top tracks by that artist?  Just click the "
-                                                                      "appropriate button. "
-                                                                      "You can even "
-                                                                      "see any available Youtube videos from that "
-                                                                      "artist.")
+                                                             "favorite artist and "
+                                                             "click the "
+                                                             "submit button.  You will then see a list of "
+                                                             "albums by that artist. "
+                                                             "From there "
+                                                             "you can see information about the artist and "
+                                                             "each individual album. "
+                                                             " Want to know "
+                                                             "the top tracks by that artist?  Just click the "
+                                                             "appropriate button. "
+                                                             "You can even "
+                                                             "see any available Youtube videos from that "
+                                                             "artist.")
 instructions.place(x=340, y=50)
 
 artist_entry = tk.Entry(fg="black", bg='white', width=25)
@@ -78,6 +78,7 @@ def album_list_request(url):
             show_track_list_button.config(state=NORMAL)
             show_music_videos_button.config(state=NORMAL)
             clear_form_button.config(state=NORMAL)
+            artist_entry.config(state=DISABLED)
     except TypeError:
         tk.messagebox.showwarning(title="No Artist Found", message="Please enter a valid artist name.")
         album_list.destroy()
@@ -241,6 +242,7 @@ def clear_list():
     show_track_list_button.config(state=DISABLED)
     show_music_videos_button.config(state=DISABLED)
     clear_form_button.config(state=DISABLED)
+    artist_entry.config(state=NORMAL)
 
 
 def help_window():
