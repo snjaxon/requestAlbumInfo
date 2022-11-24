@@ -79,6 +79,7 @@ def album_list_request(url):
             show_music_videos_button.config(state=NORMAL)
             clear_form_button.config(state=NORMAL)
             artist_entry.config(state=DISABLED)
+            submit_button.config(state=DISABLED)
     except TypeError:
         tk.messagebox.showwarning(title="No Artist Found", message="Please enter a valid artist name.")
         album_list.destroy()
@@ -235,7 +236,6 @@ def play_music_video():
 def clear_list():
     album_list.delete(0, END)
     album_list.destroy()
-    artist_entry.delete(0, END)
     show_artist_info_button.config(state=DISABLED)
     show_top_ten_songs_button.config(state=DISABLED)
     show_album_info_button.config(state=DISABLED)
@@ -243,6 +243,8 @@ def clear_list():
     show_music_videos_button.config(state=DISABLED)
     clear_form_button.config(state=DISABLED)
     artist_entry.config(state=NORMAL)
+    artist_entry.delete(0, END)
+    submit_button.config(state=NORMAL)
 
 
 def help_window():
